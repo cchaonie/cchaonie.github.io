@@ -1,6 +1,6 @@
 ---
 layout: post
-title: JavaScript学习笔记——04 this绑定
+title: JavaScript学习笔记 04 this绑定
 categories: [JavaScript]
 tags: [学习笔记]
 ---

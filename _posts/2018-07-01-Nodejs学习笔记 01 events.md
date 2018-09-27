@@ -1,13 +1,13 @@
 ---
 layout: post
-title: node.js学习笔记-01 events
+title: Nodejs学习笔记 01 events
 categories: [node.js]
 tags: [学习笔记]
 ---
 
 以下思维导图是通过阅读API文档以及源码总结的。
 
-![node.js-events](http://img.blog.csdn.net/20171009220405993?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2VpeGluXzM1ODU0ODgz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![node.js-events]({{ site.url }}/images/Nodejs01events.png)
 
 简单说明一下。
 
