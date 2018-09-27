@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Nodejs学习笔记 01 events
+title: Nodejs学习笔记-01 events
 categories: [node.js]
 tags: [学习笔记]
 ---
