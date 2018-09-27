@@ -9,6 +9,8 @@ tags: [学习笔记]
 
 在阅读了<<你不知道的JavaScript 上卷>> 后, 对JavaScript中的 this 做一个简要的总结.
 
+<!--more-->
+
 无法应用其他规则时，this会绑定全局作用域（非严格模式），或者绑定到undefined（严格模式）
 
 ```javascript

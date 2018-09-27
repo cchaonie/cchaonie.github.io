@@ -9,6 +9,8 @@ tags: [学习笔记]
 
 ![node.js-events]({{ site.url }}/images/Nodejs01.png)
 
+<!--more-->
+
 简单说明一下。
 
  - events 模块导出了 `EventEmitter` 这个 class, 因此通过 `require()` 就能直接获得。既可以直接 `new EventEmitter()` 获得事件对象，也可以继承 EventEmitter 自定义事件对象。
