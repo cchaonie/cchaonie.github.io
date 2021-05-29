@@ -4,6 +4,8 @@
 
 使用 React 做 SSR 项目时，我们会有 code-split 的需求。React 本身提供了 React.lazy 和 Suspense 组件组合的形式，可以实现 code-split。而一般来说，我们会使用 loadable-component 去做 code-split，而不是直接使用 react API。本文的目标是解析 loadable-component 在基于 React 的 SSR 的同构应用中的作用，以及其实现原理。
 
+<!--more-->
+
 ### React SSR
 
 一个具有基本功能的 React SSR 同构应用，在服务端需要完成一件事——导入 react 组件，使用 ReactDOMServer 的方法，将组件编译成字符串。
