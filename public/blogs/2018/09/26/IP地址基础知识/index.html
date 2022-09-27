@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>IP地址基础知识 | 最有效的输入是输出</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="什么是IP地址 IP地址是一个32位的二进制数字，被分为4个字节。因此，IP地址最常用的表示形式是“点分十进制”，比如192.168.1.100。点分十进制每个十进制数字都在0~255之间。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IP地址基础知识">
+<meta property="og:url" content="https://fightant1w1ll.github.io/2018/09/26/IP%E5%9C%B0%E5%9D%80%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/index.html">
+<meta property="og:site_name" content="最有效的输入是输出">
+<meta property="og:description" content="什么是IP地址 IP地址是一个32位的二进制数字，被分为4个字节。因此，IP地址最常用的表示形式是“点分十进制”，比如192.168.1.100。点分十进制每个十进制数字都在0~255之间。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-09-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-09-27T11:33:11.539Z">
+<meta property="article:author" content="fightant1w1ll">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="最有效的输入是输出" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">最有效的输入是输出</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">活到老学到老</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://fightant1w1ll.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-IP地址基础知识" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/09/26/IP%E5%9C%B0%E5%9D%80%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="article-date">
+  <time class="dt-published" datetime="2018-09-25T16:00:00.000Z" itemprop="datePublished">2018-09-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      IP地址基础知识
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>什么是IP地址</p>
+<p>IP地址是一个32位的二进制数字，被分为4个字节。因此，IP地址最常用的表示形式是“点分十进制”，比如192.168.1.100。点分十进制每个十进制数字都在0~255之间。</p>
+</li>
+</ul>
+<span id="more"></span>
+
+<ul>
+<li><p>IP地址的划分<br>IP地址中一部分是网络ID，一部分是主机ID。根据32位中网络ID和主机ID的位数，对IP地址进行了划分：</p>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>网络ID位数</th>
+<th>主机ID位数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>8(0000,0000~0111,111)</td>
+<td>24</td>
+</tr>
+<tr>
+<td>B</td>
+<td>16(1000,0000 0000,0000~1011,1111 1111 1111)</td>
+<td>16</td>
+</tr>
+<tr>
+<td>C</td>
+<td>24(1100,0000,0000,0000 0000,0000~1101,1111 1111,1111 1111,1111)</td>
+<td>8</td>
+</tr>
+</tbody></table>
+<p>A类地址以 0 开头，所以A类地址的网络ID为0000,0000<del>0111,1111 即0</del>127；<br>B类地址以 10 开头，所以B类地址的网络ID为1000,0000 0000,0000<del>1011,1111 1111,1111 即128.0</del>191.255；<br>C类地址以 110 开头，所以B类地址的网络ID为1100,0000 0000,0000 0000,0000<del>1101,1111 1111,1111 1111,1111即192.0.0</del>223.255.255；<br>全部为0代表当前主机，全部为1的地址代表当前子网的广播地址。  </p>
+<p>所以，A类地址理论上可以有$2^{24} - 2 = 16,777,214$个主机地址<br>B类地址理论上可以有$2^{16} - 2 = 65,534$个主机地址，<br>C类地址理论上可以有$2^8 - 2 = 254$个主机地址  </p>
+</li>
+<li><p>子网掩码</p>
+<p>  如果直接采用A类或者B类地址，会产生极大的浪费。因此，实际中是通过子网掩码来划分出更小的网络。<br>  子网掩码是采用原有分类中，主机ID部分作为子网地址，将原本的网络ID再进行一次划分。子网掩码中对应网络ID的部分全部为1，对应主机ID的部分全部为0。<br>  例如，<br>  IP地址为：172.20.100.52<br>  子网掩码为：255.255.255.192<br>  而1100，0000 = 192，也就是说，该IP地址中，前26位是网络ID，后6位是主机ID。<br>  子网掩码的另一种表示方式是在IP地址后追加网络ID的位数，用“/”隔开。<br>  例如：172.20.100.52/26  </p>
+<hr>
+</li>
+<li><p>其他</p>
+<p>  在IPv4中，32位二进制，能够表示的IP地址，有$2^{32}=4,294,967,296$个，40多亿是明显不够的。</p>
+<p>  对于IP资源短缺的情况，也有对应的思路和解决方案。</p>
+<ul>
+<li><p>提高可用的IP地址的数量</p>
+<p>  从IP地址形式来看，增加IP地址的位数是很直接的方法。IPv6就是用6*8=48位来表示IP地址，有$2^{48}=281，474,976,710,656$个，这样就目前的情况来看是不会出现IP短缺的情况。但是因为当前IP地址依旧是使用4个字节32的形式，因此如何做到兼容是需要考虑的。</p>
+</li>
+<li><p>复用已有的IP地址</p>
+<p>  简单来说，就是让同一个IP，让多个人来使用。</p>
+<p>  这一方面已有公网IP和私有IP，在同一个局域网内，大家使用不同的IP地址进行通信，但是到了互联网上，就使用公共IP通信。</p>
+</li>
+</ul>
+<p>  ​</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fightant1w1ll.github.io/2018/09/26/IP%E5%9C%B0%E5%9D%80%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" data-id="cl8k4luxg000jjrf8dpzi4a1s" data-title="IP地址基础知识" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/10/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88%E8%80%83%E8%AF%95-01%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          软考——01 数据库基础
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/09/19/%E4%B8%80%E6%AC%A1Ionic3%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E7%9A%84%E7%BB%8F%E5%8E%86/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">一次Ionic3上传图片的经历</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ionic/">Ionic</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nodejs/">Nodejs</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/life/">life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nodejs/">nodejs</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BD%AF%E8%80%83/">软考</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/10/23/%E4%B8%80%E8%B5%B7%E8%AF%BB%E3%80%8A%E6%96%87%E8%89%BA%E5%A4%8D%E5%85%B4%E6%98%AF%E4%BB%80%E4%B9%88%E3%80%8B%E2%80%94%E2%80%94%E7%AC%AC%E4%B8%80%E7%AF%87/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/07/SSR%20%E5%92%8C%20loadable-component/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/25/5.1%E5%87%BA%E8%A1%8C%E6%94%BB%E7%95%A5/">5.1 出行</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/14/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8nodejs%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/">如何使用nodejs开发一个命令行工具</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/08/Nodejs%E5%92%8CES6%E6%A8%A1%E5%9D%97%E6%9C%BA%E5%88%B6/">Nodejs和ES6模块机制</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 fightant1w1ll<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
