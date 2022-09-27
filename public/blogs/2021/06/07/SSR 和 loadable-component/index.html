@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>最有效的输入是输出</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="React SSR 和 loadable-component个人理解，如有错误，欢迎指正讨论 背景一般来说，当项目规模达到一定的程度后，为了性能考虑，我们会有 code-split 的需求。React 本身提供了 API(React.lazy 和 Suspense 组件组合)，可以实现 code-split。而 react SSR 的项目，我们会使用 loadable-component 去做 c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最有效的输入是输出">
+<meta property="og:url" content="https://fightant1w1ll.github.io/2021/06/07/SSR%20%E5%92%8C%20loadable-component/index.html">
+<meta property="og:site_name" content="最有效的输入是输出">
+<meta property="og:description" content="React SSR 和 loadable-component个人理解，如有错误，欢迎指正讨论 背景一般来说，当项目规模达到一定的程度后，为了性能考虑，我们会有 code-split 的需求。React 本身提供了 API(React.lazy 和 Suspense 组件组合)，可以实现 code-split。而 react SSR 的项目，我们会使用 loadable-component 去做 c">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-06-06T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-09-27T11:33:11.544Z">
+<meta property="article:author" content="fightant1w1ll">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="最有效的输入是输出" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">最有效的输入是输出</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">活到老学到老</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://fightant1w1ll.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-SSR 和 loadable-component" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/07/SSR%20%E5%92%8C%20loadable-component/" class="article-date">
+  <time class="dt-published" datetime="2021-06-06T16:00:00.000Z" itemprop="datePublished">2021-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="React-SSR-和-loadable-component"><a href="#React-SSR-和-loadable-component" class="headerlink" title="React SSR 和 loadable-component"></a>React SSR 和 loadable-component</h1><p><strong>个人理解，如有错误，欢迎指正讨论</strong></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>一般来说，当项目规模达到一定的程度后，为了性能考虑，我们会有 code-split 的需求。React 本身提供了 API(React.lazy 和 Suspense 组件组合)，可以实现 code-split。而 react SSR 的项目，我们会使用 loadable-component 去做 code-split，而不是直接使用 react API。本文的目标是解析 loadable-component 在基于 React 的 SSR 的同构应用中的作用，以及其实现原理。</p>
+<span id="more"></span>
+
+<h2 id="code-split"><a href="#code-split" class="headerlink" title="code-split"></a>code-split</h2><p>code-split 翻译过来就是代码分割，主要是为了解决<strong>客户端脚本编译打包后，产物过大，从而影响到了首屏加载性能</strong>的问题。</p>
+<p>在代码中，我们是可以明确知道，应用中哪些脚本是可以延迟加载的，延迟加载的脚本是没有必要打包到首屏脚本中。<br>因此，code split 要做的事情就是：</p>
+<ol>
+<li>在指定的位置拆分脚本代码</li>
+<li>提供一种在首屏之后加载脚本的方法</li>
+</ol>
+<p>这两个功能均由打包工具实现了。webpack 提供了 import()，可以用来指示从哪里开始拆分脚本。同时，webpack 的运行时提供了动态加载脚本的函数（动态创建 script 标签），从而可以完成首屏之后再加载脚本。</p>
+<p>webpack 的默认行为是当碰到 import()，就会进行 code-split，把需要动态加载的脚本打包到一个单独的 chunk 中。然后在应用执行到需要加载动态脚本时，才会通过动态生成 script 标签的方式，来加载目标 chunk。</p>
+<h2 id="React-SSR"><a href="#React-SSR" class="headerlink" title="React SSR"></a>React SSR</h2><p>一个具有基本功能的 React SSR 同构应用，在服务端需要完成一件事——导入 react 组件，使用 ReactDOMServer 的方法，将组件编译成 HTML 字符串。<br>重点在于这个字符串中，需要包含组件的客户端脚本 bundle 的 script 标签。</p>
+<p>在开发环境和生产环境，客户端和服务端准备脚本的过程有所不同。</p>
+<ol>
+<li><p>客户端</p>
+<p> 客户端的脚本肯定是需要编译打包的。即将开发过程中的大量脚本文件，编译后打包成少量甚至一个脚本文件，可以减少请求数量，加快首屏渲染。</p>
+<p> 在开发环境，除了完成必须的编译打包工作，还需要启动一个静态资源服务器，用以提供脚本文件服务。</p>
+<p> 在生产环境，编译打包之后的产物，一般而言会直接放到 CDN 中，再提供服务。</p>
+</li>
+<li><p>服务端</p>
+<p> 在开发环境，我们会启动一个开发服务器，从而在浏览器中完成开发工作。</p>
+<p> 而在生产环境，我们会在服务器上启动服务端脚本。所以，本质上来说，服务端的脚本是不需要打包的，因为 node 可以直接执行 JavaScript。</p>
+<p> 如果没有使用需要编译的脚本，如使用原生 nodejs 开发，这一块的编译打包的工作，其实是可以省略的。<br> 同理，如果使用的是 react api，如 React.createElement，而不是需要编译的 jsx，这一步也可以省略。</p>
+</li>
+</ol>
+<h2 id="loadable-component"><a href="#loadable-component" class="headerlink" title="loadable-component"></a>loadable-component</h2><p>它到底是干啥用的呢？官方的答案是——A React code splitting library。</p>
+<p>react 暴露了 React.lazy 函数和 Suspense 组件，可以完成<strong>代码拆分</strong>的功能，那为什么还需要 loadable-component 呢？因为 React 的方案存在缺陷——Suspense 不能在服务端使用，也就是说，如果采用了 SSR，那么首屏组件树中就不能有 Suspense 组件。而这就是 loadable-component 的价值所在了，它不需要 Suspense 组件，也能实现 code-split, 即<strong>同构代码能够实现 code-split</strong>。</p>
+<h3 id="loadable-component-由哪些组件构成"><a href="#loadable-component-由哪些组件构成" class="headerlink" title="loadable-component 由哪些组件构成"></a>loadable-component 由哪些组件构成</h3><p>下表简单总结了 loadable-component 包含的组件及其作用</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@loadable/component</td>
+<td>提供 loadable() API</td>
+</tr>
+<tr>
+<td>@loadable/server</td>
+<td>提供 ChunkExtractor</td>
+</tr>
+<tr>
+<td>@loadable/babel-plugin</td>
+<td>转换 <code>loadable</code> 函数语法，1. 为 SSR 作准备；2. 根据注释自动生成 chunk name</td>
+</tr>
+<tr>
+<td>@loadable/webpack-plugin</td>
+<td>生成 loadable-stats.json</td>
+</tr>
+</tbody></table>
+<h3 id="loadable-component-如何实现-code-split"><a href="#loadable-component-如何实现-code-split" class="headerlink" title="loadable-component 如何实现 code-split"></a>loadable-component 如何实现 code-split</h3><p>首先分析一下，在同构代码中，要实现 code-split 应该如何去做。需要明确的一点是，服务端脚本是不需要 code-split 的，node 会在需要某个脚本时，直接 require 即可。在服务端实际上面临的问题是，对于客户端有 code-split 需求的组件应该如何处理。从技术的角度来说，直接忽略这个组件是最简单的，但是这个问题的答案其实是由业务决定的。如果业务有 SEO 的需求，那即使这个组件在客户端 code-split 了，服务端还是应该渲染出实际的 HTML。</p>
+<p>loadable-component 是怎么做的呢？它提供了一个配置项 ssr（默认是 true），来指示是否需要渲染 code-split 的脚本。下面是其实现步骤：</p>
+<p>首先，@loadable/babel-plugin 会把 <code>loadable</code> 语法转换掉（这段代码来自 loadable-component 官网）。<br>从:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> loadable <span class="keyword">from</span> <span class="string">&quot;@loadable/component&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">OtherComponent</span> = <span class="title function_">loadable</span>(<span class="function">() =&gt;</span> <span class="title function_">import</span>(<span class="string">&quot;./OtherComponent&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>转换成：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> loadable <span class="keyword">from</span> <span class="string">&quot;@loadable/component&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">OtherComponent</span> = <span class="title function_">loadable</span>(&#123;</span><br><span class="line">    <span class="title function_">chunkName</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;OtherComponent&quot;</span>;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="title function_">isReady</span>(<span class="params">props</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> __webpack_modules__ !== <span class="string">&quot;undefined&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> !!__webpack_modules__[<span class="variable language_">this</span>.<span class="title function_">resolve</span>(props)];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="attr">requireAsync</span>: <span class="function">() =&gt;</span></span><br><span class="line">        <span class="title function_">import</span>(<span class="comment">/* webpackChunkName: &quot;OtherComponent&quot; */</span> <span class="string">&quot;./OtherComponent&quot;</span>),</span><br><span class="line"></span><br><span class="line">    <span class="title function_">requireSync</span>(<span class="params">props</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> id = <span class="variable language_">this</span>.<span class="title function_">resolve</span>(props);</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> __webpack_require__ !== <span class="string">&quot;undefined&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_">__webpack_require__</span>(id);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">eval</span>(<span class="string">&quot;module.require&quot;</span>)(id);</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="title function_">resolve</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">require</span>.<span class="property">resolveWeak</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">require</span>.<span class="title function_">resolveWeak</span>(<span class="string">&quot;./OtherComponent&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">require</span>(<span class="string">&quot;path&quot;</span>).<span class="title function_">resolve</span>(__dirname, <span class="string">&quot;./OtherComponent&quot;</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>转换完成之后得到的 <code>OtherComponent</code>，在 loadable-component 源码中被称为 <code>Loadable</code>，本质上是一个常规的 react 类组件。其构造函数中会有这样的逻辑：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">constructor</span>(<span class="params">props</span>) &#123;</span><br><span class="line">   <span class="comment">// ......</span></span><br><span class="line">   <span class="comment">// Server-side</span></span><br><span class="line">   <span class="keyword">if</span> (props.<span class="property">__chunkExtractor</span>) &#123;</span><br><span class="line">      <span class="comment">// This module has been marked with no SSR</span></span><br><span class="line">      <span class="keyword">if</span> (options.<span class="property">ssr</span> === <span class="literal">false</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// We run load function, we assume that it won&#x27;t fail and that it</span></span><br><span class="line">      <span class="comment">// triggers a synchronous loading of the module</span></span><br><span class="line">      ctor.requireAsync(props).<span class="title function_">catch</span>(<span class="function">() =&gt;</span> <span class="literal">null</span>)</span><br><span class="line">      <span class="comment">// So we can require now the module synchronously</span></span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">loadSync</span>()</span><br><span class="line">      props.<span class="property">__chunkExtractor</span>.<span class="title function_">addChunk</span>(ctor.<span class="title function_">chunkName</span>(props))</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">// ......</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>this.loadSync()</code> 的实现如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">loadSync</span>(<span class="params"></span>) &#123;</span><br><span class="line">   <span class="comment">// load sync is expecting component to be in the &quot;loading&quot; state already</span></span><br><span class="line">   <span class="comment">// sounds weird, but loading=true is the initial state of InnerLoadable</span></span><br><span class="line">   <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">loading</span>) <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> loadedModule = ctor.requireSync(<span class="variable language_">this</span>.<span class="property">props</span>)</span><br><span class="line">      <span class="keyword">const</span> result = <span class="title function_">resolve</span>(loadedModule, <span class="variable language_">this</span>.<span class="property">props</span>, <span class="title class_">Loadable</span>)</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">result</span> = result</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">loading</span> = <span class="literal">false</span></span><br><span class="line">   &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">error</span>(</span><br><span class="line">      <span class="string">&#x27;loadable-components: failed to synchronously load component, which expected to be available&#x27;</span>,</span><br><span class="line">      &#123;</span><br><span class="line">         <span class="attr">fileName</span>: ctor.<span class="title function_">resolve</span>(<span class="variable language_">this</span>.<span class="property">props</span>),</span><br><span class="line">         <span class="attr">chunkName</span>: ctor.<span class="title function_">chunkName</span>(<span class="variable language_">this</span>.<span class="property">props</span>),</span><br><span class="line">         <span class="attr">error</span>: error ? error.<span class="property">message</span> : error,</span><br><span class="line">      &#125;,</span><br><span class="line">      )</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">error</span> = error</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结合经过 @loadable/babel-plugin 转换之后的代码，可以发现实际上 <code>ctor.requireSync(this.props)</code> 就是在执行 node 端的 <code>require</code>。</p>
+<p>最后，这个组件的 <code>render</code> 方法会执行</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(&#123; <span class="attr">result</span>: <span class="title class_">Component</span>, props &#125;) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Component</span> &#123;<span class="attr">...props</span>&#125; /&gt;</span></span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>即把 <code>Loadable</code> 接收的 props 转发给同步加载好的子组件，进而继续服务端 react 的渲染工作。通过这样的过程，loadable-component 把在客户端会动态加载的脚本，直接在服务端同步加载了。</p>
+<h3 id="loadable-component-的其他功能"><a href="#loadable-component-的其他功能" class="headerlink" title="loadable-component 的其他功能"></a>loadable-component 的其他功能</h3><p>除了核心功能——同构代码的服务端 code-split 之外，loadable-component 还提供了其他功能。</p>
+<ol>
+<li><p><code>import(./path/$&#123;value&#125;)</code></p>
+<p> <code>React.lazy</code> 的返回值是一个不能接收 props 的组件，而 <code>loadable</code> 返回的组件可以，因此可以通过 props 指定动态载入的脚本。这一点是基于 webpack 的 <code>dynamic expressions in import()</code>实现的。</p>
+</li>
+<li><p>library splitting</p>
+<p> 即除了可以动态加载组件，loadable-component 还可以动态加载第三方库。具体的使用方法可以参考官方文档。</p>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总之，loadable-component 就是弥补了 react 当前的缺陷——在同构项目中无法实现在服务端 code-split。不过从 react 的源码来看，Suspense 在服务端是可以处理的，只是目前这个 feature 的开关没有打开，导致渲染异常。后续如果这个功能完善了，loadable-component 的后续发展就可能堪忧了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://loadable-components.com/docs/getting-started/">loadable-component 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://webpack.js.org/api/module-methods/#dynamic-expressions-in-import">dynamic expressions in import()</a></li>
+<li><a target="_blank" rel="noopener" href="https://webpack.js.org/guides/code-splitting/">code-split</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://fightant1w1ll.github.io/2021/06/07/SSR%20%E5%92%8C%20loadable-component/" data-id="cl8k4luxq0016jrf81d5e1rco" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/10/23/%E4%B8%80%E8%B5%B7%E8%AF%BB%E3%80%8A%E6%96%87%E8%89%BA%E5%A4%8D%E5%85%B4%E6%98%AF%E4%BB%80%E4%B9%88%E3%80%8B%E2%80%94%E2%80%94%E7%AC%AC%E4%B8%80%E7%AF%87/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/04/25/5.1%E5%87%BA%E8%A1%8C%E6%94%BB%E7%95%A5/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">5.1 出行</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ionic/">Ionic</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nodejs/">Nodejs</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/life/">life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nodejs/">nodejs</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BD%AF%E8%80%83/">软考</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 10px;">学习笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/10/23/%E4%B8%80%E8%B5%B7%E8%AF%BB%E3%80%8A%E6%96%87%E8%89%BA%E5%A4%8D%E5%85%B4%E6%98%AF%E4%BB%80%E4%B9%88%E3%80%8B%E2%80%94%E2%80%94%E7%AC%AC%E4%B8%80%E7%AF%87/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/06/07/SSR%20%E5%92%8C%20loadable-component/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/25/5.1%E5%87%BA%E8%A1%8C%E6%94%BB%E7%95%A5/">5.1 出行</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/14/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8nodejs%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/">如何使用nodejs开发一个命令行工具</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/08/Nodejs%E5%92%8CES6%E6%A8%A1%E5%9D%97%E6%9C%BA%E5%88%B6/">Nodejs和ES6模块机制</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 fightant1w1ll<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
