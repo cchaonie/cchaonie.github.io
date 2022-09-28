@@ -6,6 +6,14 @@
   "scripts": {
     "build": "ts-node scripts/build.ts"
   },
+  "workspaces": [
+    "packages/g2m",
+    "packages/apmer"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fightant1w1ll/fightant1w1ll.github.io.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -15,5 +23,9 @@
   },
   "devDependencies": {
     "ts-node": "^10.9.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/fightant1w1ll/fightant1w1ll.github.io/issues"
+  },
+  "homepage": "https://github.com/fightant1w1ll/fightant1w1ll.github.io#readme"
 }
