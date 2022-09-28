@@ -1,0 +1,9 @@
+{
+    "*.{js,tsx}": [
+      "eslint --ignore-pattern '!.*' --max-warnings 0 --fix",
+      "prettier --write",
+      "jest --bail --findRelatedTests"
+    ],
+    "*.{json,md,yaml}": "prettier --write"
+  }
+  
