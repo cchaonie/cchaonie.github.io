@@ -1,0 +1,26 @@
+.board {
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+}
+
+.board_description {
+    display: flex;
+    justify-content: space-between;
+}
+
+.score {
+    display: flex;
+    flex-direction: column;
+    padding-block: 8px;
+}
+
+.score_item {
+    flex-grow: 1;
+}
+
+.board_battleField {
+    position: relative;
+    height: 600px;
+    background-color: aliceblue;
+}
