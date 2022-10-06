@@ -7,21 +7,18 @@
   
   <title>软考——03 数据结构基础 | 最有效的输入是输出</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="软件设计师考试——数据结构基础部分这篇文章主要是数据结构及算法的第一部分。内容来自作者整理以及个人理解，如有错误，还请见谅，或直接联系本人 包括以下四个部分：  数据如何存在于计算机中 数据结构分类 线性结构 非线性结构   思维导图">
+  <meta name="description" content="软件设计师考试——数据结构基础部分这篇文章主要是数据结构及算法的第一部分。内容来自作者整理以及个人理解，如有错误，还请见谅，或直接联系本人 包括以下四个部分：  数据如何存在于计算机中 数据结构分类 线性结构 非线性结构   思维导图  ![uml](&#x2F;images&#x2F;ruankao&#x2F;data_structure.png)">
 <meta property="og:type" content="article">
 <meta property="og:title" content="软考——03 数据结构基础">
 <meta property="og:url" content="https://fightant1w1ll.github.io/blogs/2018/10/15/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88%E8%80%83%E8%AF%95-03%20%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="最有效的输入是输出">
-<meta property="og:description" content="软件设计师考试——数据结构基础部分这篇文章主要是数据结构及算法的第一部分。内容来自作者整理以及个人理解，如有错误，还请见谅，或直接联系本人 包括以下四个部分：  数据如何存在于计算机中 数据结构分类 线性结构 非线性结构   思维导图">
+<meta property="og:description" content="软件设计师考试——数据结构基础部分这篇文章主要是数据结构及算法的第一部分。内容来自作者整理以及个人理解，如有错误，还请见谅，或直接联系本人 包括以下四个部分：  数据如何存在于计算机中 数据结构分类 线性结构 非线性结构   思维导图  ![uml](&#x2F;images&#x2F;ruankao&#x2F;data_structure.png)">
 <meta property="og:locale">
-<meta property="og:image" content="https://fightant1w1ll.github.io/images/ruankao/data_structure.png">
-<meta property="og:image" content="https://fightant1w1ll.github.io/images/ruankao/how_data_store_in_computer.png">
 <meta property="article:published_time" content="2018-10-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-10-06T06:56:01.782Z">
+<meta property="article:modified_time" content="2022-10-06T07:57:01.714Z">
 <meta property="article:author" content="fightant1w1ll">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://fightant1w1ll.github.io/images/ruankao/data_structure.png">
   
     <link rel="alternate" href="/blogs/atom.xml" title="最有效的输入是输出" type="application/atom+xml">
   
@@ -108,7 +105,7 @@
 </li>
 <li><h3 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h3></li>
 </ul>
-<p><img src="/images/ruankao/data_structure.png" alt="uml"></p>
+<p>![uml](&#x2F;images&#x2F;ruankao&#x2F;data_structure.png)</p>
 <span id="more"></span>
 
 <ul>
@@ -116,7 +113,7 @@
 <li><p>数据如何存在于计算机中</p>
 <pre><code>通俗来说，算法是解决问题的一系列步骤，计算机是执行算法的工具。但是计算机只能认识 0 和 1，因此需要对问题进行抽象，然后输入到计算机中，最后应用算法进行求解。而数据结构就是对问题的抽象。而在讨论数据结构之前，我们需要明确一点，数据在计算机中是如何存在的。
 </code></pre>
-<p><img src="/images/ruankao/how_data_store_in_computer.png" alt="数据如何存在于计算机中"></p>
+<p>![数据如何存在于计算机中](&#x2F;images&#x2F;ruankao&#x2F;how_data_store_in_computer.png)</p>
 <pre><code>如上图所示，计算机中的数据就像是一栋楼房，每层都可以放数据，每层有相应的层号，用来定位当前的位置。若把每层都看作一个比特(bit)，则每层放的数据不是0，就是1；若把每层都看作一个字节(Byte)，则每层可以放 0~255 这256个数字中的任何一个。
 
 对编程稍微有所了解的人都可以很快想到数组——计算机中的数据就是类似数组进行组织的。基于此，我们很直观的就能想到怎么把一个集合的数据存储计算机中：

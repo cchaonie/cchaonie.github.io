@@ -7,7 +7,7 @@ tags: [学习笔记]
 
 以下思维导图是通过阅读API文档以及源码总结的。
 
-![node.js-events](/images/Nodejs01.png)
+![node.js-events]({{ site.url }}/images/Nodejs01.png)
 
 <!--more-->
 
