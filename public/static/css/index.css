@@ -4,6 +4,30 @@ body {
     padding: 0;
 }
 
+a {
+    text-decoration: none;
+}
+
 body {
     background: url('../images/futuristic-7148439_1920.jpg');
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.menu_item {
+    display: block;
+    color: #ffffff;
+    font-size: 64px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.menu_item:hover {
+    transition: transform 0.3s ease-in;
+    transform: translate(10px, 10px) rotate(5deg);
 }
