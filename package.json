@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">16.7.0"
+  },
   "scripts": {
-    "build": "ts-node scripts/build.ts",
+    "buildStatic": "ts-node scripts/build.ts",
     "dev": "ts-node scripts/development.ts"
   },
   "workspaces": [

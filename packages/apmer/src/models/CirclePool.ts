@@ -1,5 +1,4 @@
 import collapsed from '../utils/collapsed';
-import distance from '../utils/distance';
 import getRandomCoordinates from '../utils/getRandomCoordinates';
 import { CirclePoolEvents } from './constant';
 import { Circle, Listener } from './types';
@@ -10,7 +9,7 @@ class CirclePool {
     [CirclePoolEvents.CREATE]: [],
     [CirclePoolEvents.DISPOSE]: [],
   };
-  #creationId: number | undefined;
+  #creationId: any;
 
   set circles(circles: Circle[]) {
     this.#circles = circles;
