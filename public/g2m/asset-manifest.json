@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/g2m/static/css/main.821d412a.css",
+    "main.js": "/g2m/static/js/main.b1affa8a.js",
+    "index.html": "/g2m/index.html",
+    "main.821d412a.css.map": "/g2m/static/css/main.821d412a.css.map",
+    "main.b1affa8a.js.map": "/g2m/static/js/main.b1affa8a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.821d412a.css",
+    "static/js/main.b1affa8a.js"
+  ]
+}
