@@ -6,6 +6,7 @@ import pkg from '../package.json';
 
 const cwd = process.cwd();
 const publicDirectory = path.resolve(cwd, 'public');
+const distDirectory = path.resolve(cwd, 'dist');
 const packagesDirectory = path.resolve(cwd, 'packages');
 
 function buildSubModules() {
@@ -31,6 +32,7 @@ async function moveDistDirectory(source: string, target: string) {
     console.error('Build submodules failed');
     throw error;
   }
+
   const subModules = pkg.workspaces.map(w => w.split('/')[1]);
 
   for (const m of subModules) {
@@ -48,9 +50,18 @@ async function moveDistDirectory(source: string, target: string) {
   }
 }
 
-moveDistDirectory(packagesDirectory, publicDirectory)
-  .then(() => console.log('SUBMODULES building is SUCCESSFUL'))
+moveDistDirectory(packagesDirectory, distDirectory)
+  .then(() => {
+    console.log('[SUBMODULES building] is SUCCESSFUL');
+    return fs.cp(publicDirectory, distDirectory, {
+      force: true,
+      recursive: true,
+    });
+  })
+  .then(() => {
+    console.log('[MOVING main content] is SUCCESSFUL');
+  })
   .catch(e => {
     console.error(e);
-    console.log('SUBMODULES building is FAILED');
+    console.log('[SUBMODULES building] is FAILED');
   });
