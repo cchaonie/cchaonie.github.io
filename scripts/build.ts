@@ -4,11 +4,7 @@ import { exec } from 'child_process';
 
 import pkg from '../package.json';
 
-const cwd = process.cwd();
-
-const distDirectory = path.resolve(cwd, 'dist');
-const packagesDirectory = path.resolve(cwd, 'packages');
-
+// TODO: use top level async/await in typescript
 function buildSubModules() {
   return new Promise((resolve, reject) => {
     const ps = exec(`npm run build --workspaces`);
@@ -49,27 +45,36 @@ async function moveSubModulesDistDirectory(source: string, target: string) {
   }
 }
 
-async function moveMainAppDistDirectory() {
-  const mainAppDist = path.resolve(cwd, 'packages/main/dist');
+async function moveMainAppDistDirectory(source: string, target: string) {
   try {
-    await fs.cp(mainAppDist, distDirectory, {
+    await fs.cp(source, target, {
       force: true,
       recursive: true,
     });
-    console.log(`[MOVING MAIN APP DIST] is SUCCESSFUL`);
+    console.log(`[MOVING] MAIN APP DIST is SUCCESSFUL`);
   } catch (error) {
     console.error(error);
-    console.log(`[MOVING MAIN APP DIST] is FAILED`);
+    console.log(`[MOVING] MAIN APP DIST is FAILED`);
   }
 }
 
-buildSubModules()
-  .then(() => moveSubModulesDistDirectory(packagesDirectory, distDirectory))
-  .then(() => moveMainAppDistDirectory())
-  .then(() => {
-    console.log('[MOVING whole content] is SUCCESSFUL');
-  })
-  .catch(e => {
-    console.error(e);
-    console.log('[MOVING whole content] is FAILED');
-  });
+export function build() {
+  const cwd = process.cwd();
+
+  const distDirectory = path.resolve(cwd, 'dist');
+  const packagesDirectory = path.resolve(cwd, 'packages');
+  const mainAppDist = path.resolve(cwd, 'packages/main/dist');
+
+  return buildSubModules()
+    .then(() => moveSubModulesDistDirectory(packagesDirectory, distDirectory))
+    .then(() => moveMainAppDistDirectory(mainAppDist, distDirectory))
+    .then(() => {
+      console.log('[MOVING] whole content is SUCCESSFUL');
+    })
+    .catch(e => {
+      console.error(e);
+      console.log('[MOVING] whole content is FAILED');
+    });
+}
+
+build();
