@@ -7,13 +7,14 @@
     "node": ">16.7.0"
   },
   "scripts": {
-    "buildStatic": "ts-node scripts/build.ts",
+    "buildStatic": "rimraf dist && ts-node scripts/build.ts",
     "dev": "ts-node scripts/development.ts"
   },
   "workspaces": [
     "packages/g2m",
     "packages/apmer",
-    "packages/blogs"
+    "packages/blogs",
+    "packages/main"
   ],
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@types/express": "^4.17.14",
     "@types/node": "^18.7.23",
+    "rimraf": "^3.0.2",
     "ts-node": "^10.9.1"
   },
   "bugs": {
