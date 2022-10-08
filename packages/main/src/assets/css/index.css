@@ -22,13 +22,13 @@ a {
 .menu_subitem {
     font-size: 16px;
     font-weight: 400;
+    cursor: pointer;
 }
 
 .menu_item {
     font-size: 32px;
     font-weight: 700;
     line-height: 1.5;
-    cursor: pointer;
 }
 
 .menu_subitem:hover {
