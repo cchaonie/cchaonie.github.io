@@ -1,0 +1,27 @@
+{
+  "name": "main",
+  "version": "1.0.0",
+  "description": "Main application",
+  "main": "index.js",
+  "dependencies": {
+    "typescript": "^4.8.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.7.23",
+    "ts-node": "^10.9.1"
+  },
+  "scripts": {
+    "build": "ts-node ./scripts/build.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fightant1w1ll/fightant1w1ll.github.io.git"
+  },
+  "author": "FIGHTANT1W1LL",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fightant1w1ll/fightant1w1ll.github.io/issues"
+  },
+  "homepage": "https://github.com/fightant1w1ll/fightant1w1ll.github.io#readme"
+}
