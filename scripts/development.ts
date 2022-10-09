@@ -1,21 +1,24 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs/promises';
-import { build } from './build';
 
-// watch the changes and restart the dev server
-async function watchSourceChange() {
-  const cwd = process.cwd();
-  const events = fs.watch(path.resolve(cwd, 'packages'), {
-    recursive: true,
-  });
+import { buildModule, moveModule } from './utils';
 
-  for await (const e of events) {
-    console.log(`[FILE CHANGE] detected: ${e.eventType}-${e.filename}`);
-    if (e.eventType === 'change') {
-      build().then(() => {
-        console.log('[UPDATE] site is SUCCESSFUL');
-      });
+const cwd = process.cwd();
+
+async function watchModule(moduleName: string, ...folders: string[]) {
+  for (const folder of folders) {
+    const events = fs.watch(path.resolve(cwd, 'packages', moduleName, folder), {
+      recursive: true,
+    });
+
+    for await (const e of events) {
+      console.log(`[FILE UPDATE] detected: ${e.eventType}----${e.filename}`);
+      await buildModule(moduleName);
+      await moveModule(
+        path.resolve(cwd, 'packages', moduleName, 'dist'),
+        path.resolve(cwd, 'dist', moduleName)
+      );
     }
   }
 }
@@ -23,9 +26,9 @@ async function watchSourceChange() {
 const app = express();
 const port = 3301;
 
-app.use(express.static(path.resolve(process.cwd(), 'dist')));
+app.use(express.static(path.resolve(cwd, 'dist')));
 
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log(`[DEV-SERVER] is listening on port ${port}`);
-  // watchSourceChange().then(() => console.log('[WATCHING] site changes'));
+  await watchModule('blogs', 'source');
 });
