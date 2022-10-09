@@ -35,3 +35,10 @@ a {
     transition: transform 0.3s ease-in;
     transform: scale(1.1);
 }
+
+
+canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
