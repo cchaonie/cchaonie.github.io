@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs/promises';
 
-import { buildModule, moveModule } from './utils';
+import { buildModule, moveModule } from './utils.js';
 
 const cwd = process.cwd();
 

@@ -2,13 +2,13 @@
   "name": "fightant1w1ll.github.io",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
   "engines": {
     "node": ">16.7.0"
   },
   "scripts": {
-    "buildStatic": "rimraf dist && ts-node scripts/build.ts",
-    "dev": "ts-node scripts/development.ts"
+    "buildStatic": "rimraf dist && ts-node-esm scripts/build.ts",
+    "dev": "ts-node-esm scripts/development.ts"
   },
   "workspaces": [
     "packages/g2m",
