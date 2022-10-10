@@ -1,8 +1,7 @@
 import path from 'path';
 
-import { buildModule, moveModule } from './utils';
-
-const pkg = require('../package.json');
+import { buildModule, moveModule } from './utils.js';
+import pkg from '../package.json' assert { type: 'json' };
 
 const buildAllSubModules = () =>
   Promise.all(
@@ -30,30 +29,26 @@ const distDirectory = path.resolve(cwd, 'dist');
 const mainAppDist = path.resolve(cwd, 'packages/main/dist');
 const packagesDirectory = path.resolve(cwd, 'packages');
 
-async function build() {
-  try {
-    await buildAllSubModules();
-    console.log('[BUILDING] all modules is SUCCESSFUL');
-  } catch (error) {
-    console.error(error);
-    console.log('[BUILDING] all modules is FAILED');
-  }
-
-  try {
-    await moveModule(mainAppDist, distDirectory);
-    console.log('[MOVING] main is SUCCESSFUL');
-  } catch (error) {
-    console.error(error);
-    console.log('[MOVING] main is FAILED');
-  }
-
-  try {
-    await moveSubModulesDistDirectory(packagesDirectory, distDirectory);
-    console.log('[MOVING] submodules is SUCCESSFUL');
-  } catch (error) {
-    console.error(error);
-    console.log('[MOVING] submodules content is FAILED');
-  }
+try {
+  await buildAllSubModules();
+  console.log('[BUILDING] all modules is SUCCESSFUL');
+} catch (error) {
+  console.error(error);
+  console.log('[BUILDING] all modules is FAILED');
 }
 
-build();
+try {
+  await moveModule(mainAppDist, distDirectory);
+  console.log('[MOVING] main is SUCCESSFUL');
+} catch (error) {
+  console.error(error);
+  console.log('[MOVING] main is FAILED');
+}
+
+try {
+  await moveSubModulesDistDirectory(packagesDirectory, distDirectory);
+  console.log('[MOVING] submodules is SUCCESSFUL');
+} catch (error) {
+  console.error(error);
+  console.log('[MOVING] submodules content is FAILED');
+}
