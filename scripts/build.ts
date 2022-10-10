@@ -1,48 +1,59 @@
 import path from 'path';
 
-import pkg from '../package.json';
 import { buildModule, moveModule } from './utils';
 
-// TODO: use top level async/await in typescript
-function buildAllSubModules() {
-  const subModules = pkg.workspaces.map(w => w.split('/')[1]);
+const pkg = require('../package.json');
 
-  return Promise.all(subModules.map(m => buildModule(m)));
-}
+const buildAllSubModules = () =>
+  Promise.all(
+    pkg.workspaces
+      .map((w: string) => w.split('/')[1])
+      .map((m: string) => buildModule(m))
+  );
 
-async function moveSubModulesDistDirectory(source: string, target: string) {
-  const subModules = pkg.workspaces
-    .map(w => w.split('/')[1])
-    .filter(w => w !== 'main');
+const moveSubModulesDistDirectory = (source: string, target: string) =>
+  Promise.all(
+    pkg.workspaces
+      .map((w: string) => w.split('/')[1])
+      .filter((w: string) => w !== 'main')
+      .map((m: string) => {
+        const src = path.resolve(source, m, 'dist');
+        const dist = path.resolve(target, m);
+        moveModule(src, dist);
+      })
+  );
 
-  for (const m of subModules) {
-    const src = path.resolve(source, m, 'dist');
-    const dist = path.resolve(target, m);
-    await moveModule(src, dist);
+const cwd = process.cwd();
+
+const distDirectory = path.resolve(cwd, 'dist');
+
+const mainAppDist = path.resolve(cwd, 'packages/main/dist');
+const packagesDirectory = path.resolve(cwd, 'packages');
+
+async function build() {
+  try {
+    await buildAllSubModules();
+    console.log('[BUILDING] all modules is SUCCESSFUL');
+  } catch (error) {
+    console.error(error);
+    console.log('[BUILDING] all modules is FAILED');
   }
-}
 
-async function moveMainAppDistDirectory(source: string, target: string) {
-  await moveModule(source, target);
-}
+  try {
+    await moveModule(mainAppDist, distDirectory);
+    console.log('[MOVING] main is SUCCESSFUL');
+  } catch (error) {
+    console.error(error);
+    console.log('[MOVING] main is FAILED');
+  }
 
-function build() {
-  const cwd = process.cwd();
-
-  const distDirectory = path.resolve(cwd, 'dist');
-  const packagesDirectory = path.resolve(cwd, 'packages');
-  const mainAppDist = path.resolve(cwd, 'packages/main/dist');
-
-  return buildAllSubModules()
-    .then(() => moveSubModulesDistDirectory(packagesDirectory, distDirectory))
-    .then(() => moveMainAppDistDirectory(mainAppDist, distDirectory))
-    .then(() => {
-      console.log('[MOVING] whole content is SUCCESSFUL');
-    })
-    .catch(e => {
-      console.error(e);
-      console.log('[MOVING] whole content is FAILED');
-    });
+  try {
+    await moveSubModulesDistDirectory(packagesDirectory, distDirectory);
+    console.log('[MOVING] submodules is SUCCESSFUL');
+  } catch (error) {
+    console.error(error);
+    console.log('[MOVING] submodules content is FAILED');
+  }
 }
 
 build();
