@@ -31,4 +31,5 @@ app.use(express.static(path.resolve(cwd, 'dist')));
 app.listen(port, async () => {
   console.log(`[DEV-SERVER] is listening on port ${port}`);
   await watchModule('blogs', 'source');
+  await watchModule('main', 'src');
 });
