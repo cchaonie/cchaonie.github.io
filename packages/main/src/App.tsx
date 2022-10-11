@@ -1,6 +1,12 @@
+import { useEffect } from 'react';
 import './App.css';
+import { animate } from './components';
 
 function App() {
+  useEffect(() => {
+    animate();
+  }, []);
+
   return (
     <div className='main'>
       <div className='menu'>
