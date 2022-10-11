@@ -1,0 +1,27 @@
+.menu {
+    display: flex;
+    min-width: 300px;
+    justify-content: space-between;
+}
+
+.menu_item {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.submenu_item {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.menu_link {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+}
+
+.menu_link:hover {
+    transition: transform 0.3s ease-in;
+    transform: scale(1.1);
+}

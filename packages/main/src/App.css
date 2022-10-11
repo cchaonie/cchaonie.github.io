@@ -20,28 +20,7 @@ a {
   align-items: center;
 }
 
-.menu {
-  display: flex;
-  min-width: 300px;
-  justify-content: space-between;
-}
 
-.menu_subitem {
-  font-size: 16px;
-  font-weight: 400;
-  cursor: pointer;
-}
-
-.menu_item {
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-.menu_subitem:hover {
-  transition: transform 0.3s ease-in;
-  transform: scale(1.1);
-}
 
 canvas {
   position: absolute;
