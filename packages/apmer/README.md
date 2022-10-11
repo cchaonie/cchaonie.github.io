@@ -1,3 +1,3 @@
-# Learn react 18
+# apmer
 
-Learn how react 18 works
+A game to improve APM
