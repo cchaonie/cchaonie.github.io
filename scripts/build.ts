@@ -35,6 +35,7 @@ try {
 } catch (error) {
   console.error(error);
   console.log('[BUILDING] all modules is FAILED');
+  throw error;
 }
 
 try {
@@ -43,6 +44,7 @@ try {
 } catch (error) {
   console.error(error);
   console.log('[MOVING] main is FAILED');
+  throw error;
 }
 
 try {
@@ -51,4 +53,5 @@ try {
 } catch (error) {
   console.error(error);
   console.log('[MOVING] submodules content is FAILED');
+  throw error;
 }
