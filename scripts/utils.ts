@@ -3,16 +3,13 @@ import fs from 'fs/promises';
 
 export const buildModule = (moduleName: string) =>
   new Promise((resolve, reject) => {
-    const ps = exec(`npm run build -w ${moduleName}`);
-
-    ps.on('close', code => {
-      console.log(`[BUILD MODULE] ${moduleName} is SUCCESSFUL`);
-      resolve(code);
-    });
-
-    ps.on('error', error => {
-      console.log(`[BUILD MODULE] ${moduleName} is FAILED`);
-      reject(error);
+    exec(`npm run build -w ${moduleName}`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(stderr);
+        reject(error);
+      }
+      console.log(stdout);
+      resolve('SUCCESS');
     });
   });
 
