@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { API_KEY, PIXABAY_API_ENDPOINT } from './constant';
+import { PIXABAY_API_ENDPOINT } from './constant';
 import { PixabayImageProps } from './types';
 
-export const PixabayImage = ({ width, height }: PixabayImageProps) => {
+export const PixabayImage = ({ width, height, API_KEY }: PixabayImageProps) => {
   const [imgSrc, setImgSrc] = useState(null);
 
   useEffect(() => {
