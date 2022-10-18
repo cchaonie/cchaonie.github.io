@@ -3,7 +3,6 @@ import './app.css';
 import { menuLinks } from './components/constant';
 import Menu from './components/Menu/Menu';
 import { MyScene } from './components/MyScene/MyScene';
-import { PixabayImage } from './components/PixabayImage/PixabayImage';
 
 function App() {
   return (
@@ -15,7 +14,7 @@ function App() {
         <div className='menu'>
           <Menu links={menuLinks} />
         </div>
-        <div className='support'>
+        {/* <div className='support'>
           <span className=''>Images are provided by </span>
           <a href='https://pixabay.com/'>
             <img
@@ -24,13 +23,7 @@ function App() {
               alt='Pixabay'
             />
           </a>
-        </div>
-      </div>
-      <div className='background'>
-        <PixabayImage
-          width={window.innerWidth}
-          height={window.innerHeight - 150}
-        />
+        </div> */}
       </div>
     </div>
   );
