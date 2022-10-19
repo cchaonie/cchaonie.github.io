@@ -5,4 +5,4 @@ export const GameStatus = {
   OVER: 'OVER',
 };
 
-export const MaxCountDown = 5;
+export const MaxCountDown = 60;
