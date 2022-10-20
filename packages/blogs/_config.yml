@@ -7,13 +7,13 @@ title: The best way to learn is to teach
 subtitle: Never too old to learn
 description: frontend
 keywords:
-author: fightant1w1ll
+author: cchaonie
 language: zh
 timezone: Asia/Shanghai
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://fightant1w1ll.github.io/blogs
+url: https://cchaonie.github.io/blogs
 root: /blogs/
 permalink_defaults:
 pretty_urls:
