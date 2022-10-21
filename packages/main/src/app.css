@@ -32,11 +32,10 @@ canvas {
 
 .myScene {
   width: 300px;
-  flex: 0 0 1;
 }
 
 .menu {
-  flex: 1 0 1;
+  flex: 1 0 0;
 }
 
 .support {

@@ -4,6 +4,15 @@ export const menuLinks = [
     link: './blogs/index.html',
   },
   {
+    name: 'Solutions',
+    children: [
+      {
+        name: 'React Infinite Scroller',
+        link: './infinite-scroller/index.html',
+      },
+    ],
+  },
+  {
     name: 'Game',
     children: [
       {
