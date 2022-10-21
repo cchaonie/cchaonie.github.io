@@ -14,7 +14,8 @@
     "packages/g2m",
     "packages/apmer",
     "packages/blogs",
-    "packages/main"
+    "packages/main",
+    "packages\\infinite-scroller"
   ],
   "repository": {
     "type": "git",
