@@ -1,5 +1,5 @@
 {
-  "name": "fightant1w1ll.github.io",
+  "name": "cchaonie.github.io",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -14,11 +14,12 @@
     "packages/g2m",
     "packages/apmer",
     "packages/blogs",
-    "packages/main"
+    "packages/main",
+    "packages/infinite-scroller"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fightant1w1ll/fightant1w1ll.github.io.git"
+    "url": "git+https://github.com/cchaonie/cchaonie.github.io.git"
   },
   "keywords": [],
   "author": "",
@@ -34,7 +35,7 @@
     "ts-node": "^10.9.1"
   },
   "bugs": {
-    "url": "https://github.com/fightant1w1ll/fightant1w1ll.github.io/issues"
+    "url": "https://github.com/cchaonie/cchaonie.github.io/issues"
   },
-  "homepage": "https://github.com/fightant1w1ll/fightant1w1ll.github.io#readme"
+  "homepage": "https://github.com/cchaonie/cchaonie.github.io#readme"
 }

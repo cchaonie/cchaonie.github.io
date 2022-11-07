@@ -1,1 +1,1 @@
-Blogs site using hexo
+Personal Blogs site

@@ -1,0 +1,1 @@
+export const PIXABAY_API_ENDPOINT = 'https://pixabay.com/api/';
