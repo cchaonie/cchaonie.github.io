@@ -8,12 +8,16 @@ function App() {
   return (
     <div className='main'>
       <div className='header'>
-        <div className='myScene'>
-          <MyScene />
-        </div>
         <div className='menu'>
           <Menu links={menuLinks} />
         </div>
+      </div>
+      <div className='content'>
+        <div className='myScene'>
+          <MyScene />
+        </div>
+      </div>
+      <div className='footer'>
         {/* <div className='support'>
           <span className=''>Images are provided by </span>
           <a href='https://pixabay.com/'>
