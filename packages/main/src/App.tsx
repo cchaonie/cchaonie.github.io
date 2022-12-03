@@ -8,9 +8,7 @@ function App() {
   return (
     <div className='main'>
       <div className='header'>
-        <div className='menu'>
-          <Menu links={menuLinks} />
-        </div>
+        <Menu links={menuLinks} />
       </div>
       <div className='content'>
         <div className='myScene'>
