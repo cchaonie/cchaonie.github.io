@@ -1,11 +1,11 @@
 export const menuLinks = [
   {
-    name: 'Blog',
+    name: 'Blogs',
     link: './blogs/index.html',
   },
   {
     name: 'Solutions',
-    children: [
+    subLinks: [
       {
         name: 'React Infinite Scroller',
         link: './infinite-scroller/index.html',
@@ -13,8 +13,8 @@ export const menuLinks = [
     ],
   },
   {
-    name: 'Game',
-    children: [
+    name: 'Games',
+    subLinks: [
       {
         name: 'APMER',
         link: './apmer/index.html',
