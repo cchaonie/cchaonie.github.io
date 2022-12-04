@@ -162,13 +162,19 @@ Lanes 之间的运算其实就是两个集合之间的运算。
 
 ## Lane 模型中的其他概念
 
-回到 Lane 代表的其实是优先级这个概念，只讲优先级是没有意义的，优先级必须要跟具体的任务挂钩才有价值。在 React 的世界里，对任务的抽象其实就是 Fiber。
+回到 Lane 代表的其实是优先级这个概念，只讲优先级是没有意义的，优先级必须要跟具体的任务挂钩才有价值。通过浏览 Lane 模型的源码，我们可以很快发现，Lane 模型支持的运算中，入参和出参的类型有以下几种：
 
-### Lane 与过期时间
+1. Lane Lanes
+2. LaneMap
+3. Time(number): eventTime currentTime expirationTime
+4. FiberRoot
+5. Fiber
 
-除了任务之外，与 Lane 相关的另一个概念就是*过期时间*，即 `expirationTime`，如果一个任务没有在其优先级的时间范围上得到执行，那么就可以说这个任务过期了。所以，不同的 Lane 还代表了不同的处理时间。这同样符合优先级的概念，一个具有优先级的任务，表示这个任务应当在某个时间段内完成，否则就应当被判定为超时了。
+与 Lane 和 Lanes 相关的是 Lane 模型中对优先级这个概念本身的一些基本操作。后面三种则是 Lane 模型在 React 中的应用。Lane 与 FiberRoot 和 Fiber 之间的关系需要进一步探索，这里先介绍一下 Lane 与时间相关的操作。
 
-因此，React 中还有一个函数用来从 `Lane` 得到 `expirationTime`。在目前的实现中，Lane 模型中定义了 4 种超时时间：
+### Lane 与时间
+
+Lane 代表的是优先级，优先级其实就是要在什么时间之内完成任务，所以 Lane 与时间关系密切。任务是一定要处理的，对于不同优先级的任务，React 都会赋予一个超时时间，即 `expirationTime`，一旦超出这个时间，说明当前任务已经过期，接下来一定要处理了。目前，Lane 模型中定义了 4 种超时时间：
 
 1. 250 ms (`InputContinuousLane`)
 2. 5000 ms (`TransitionLane16`)
@@ -176,3 +182,5 @@ Lanes 之间的运算其实就是两个集合之间的运算。
 4. -1 (`OffscreenLane`)
 
 其中，`-1` 表示永不超时。
+
+除此之外，要理解 Lane 与时间的关系，还是需要先明白 Lane 与 FiberRoot 和 Fiber 的关系，这一块是 Lane 模型的核心价值，后续专门讲解。
