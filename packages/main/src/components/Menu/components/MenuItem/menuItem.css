@@ -15,9 +15,7 @@
 .submenu {
     width: 100%;
     position: absolute;
-    border: 1ps solid #eee;
-    border-top: none;
-    box-shadow: 1px 1px 4px 2px rgba(0, 0, 0, 0.75);
+    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.75);
     padding: 16px;
     box-sizing: border-box;
 }
