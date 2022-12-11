@@ -51,5 +51,17 @@ categories: Frontend
 然后是 nextLanes 和 wipLanes 的比较，总的原则就是，如果 wipLanes 的优先级更高，则直接返回 wipLanes。否则进入对 nextLanes 的进一步处理：
 
 1. 如果 nextLanes 中包含 InputContinuousLane ， 则在其中*混入* pendingLanes 和 DefaultLane 的交集。
-2. 处理 entangledLanes 。如果 entangledLanes 存在并且与 nextLanes 之间存在交集，就把 entanglements 中的 lanes *混入* nextLanes ，并最终返回 nextLanes 。
+2. 处理 entangledLanes 。如果 entangledLanes 存在并且与 nextLanes 之间存在交集，就把 entanglements 中的 lanes _混入_ nextLanes ，并最终返回 nextLanes 。
+
 ### markStarvedLanesAsExpired(root: FiberRoot, currentTime: number): void
+
+这个函数相对容易理解一点，即根据当前时间，对 FiberRoot 中的 Lanes 进行状态变更，步骤如下：
+1. 取出 pendingLanes、suspendedLanes 和 pingedLanes 。
+2. 再取出 expirationTimes 。
+3. 求 pendingLanes 中非 RetryLanes （比 TransitionLanes 优先级低，比 IdleLanes 的优先级高的 4 个 Lane） 的部分进行状态变更：
+    1. 从低到高依此取出每个 lane
+    2. 再取出对应这个 lane 在 expirationTimes 中的 expirationTime
+        1. 如果 expirationTime 是 NoTimestamp ，即这个 Lane 永不过期
+            1. 如果这个 lane 不是 suspendedLane ，或者是 pingedLane ，则重新计算 expirationTime ，并更新到 expirationTimes 当中。
+        2. 否则，如果 `expirationTime <= currentTime` ，则把这个 lane 加入到 expiredLanes
+    
