@@ -77,3 +77,11 @@ categories: Frontend
 1. 把 `updateLane` 加入到 `root.pendingLanes` 这个集合中
 2. 如果 `updateLane` 不是 `IdleLane` ，把 `root.suspendedLanes` 和 `root.pingedLanes` 置为 `NoLanes`
 3. 更新 `updateLane` 对应在 `root.eventTimes` 中的时间戳为 `eventTime`
+
+### markRootSuspended(root: FiberRoot, suspendedLanes: Lanes): void
+
+这个函数就是更新 `FiberRoot#suspendedLanes` 的实现。
+
+1. 把 `suspendedLanes` 加入到 `root.suspendedLanes` 这个集合中
+2. 更新 `root.pingedLanes` ， 仅保留 `~suspendedLanes` 与 `root.pingedLanes` 的交集 （这一步的实际意义暂不清楚）
+3. 更新 `root.expirationTimes` ，把 `suspendedLanes` 中 `Lane` 对应的 `expirationTime` 置成 `NoTimestamp` ，即中断的任务永不过期
