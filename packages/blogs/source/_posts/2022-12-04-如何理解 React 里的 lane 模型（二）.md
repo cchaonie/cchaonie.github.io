@@ -56,12 +56,16 @@ categories: Frontend
 ### markStarvedLanesAsExpired(root: FiberRoot, currentTime: number): void
 
 这个函数相对容易理解一点，即根据当前时间，对 FiberRoot 中的 Lanes 进行状态变更，步骤如下：
+
 1. 取出 pendingLanes、suspendedLanes 和 pingedLanes 。
 2. 再取出 expirationTimes 。
 3. 求 pendingLanes 中非 RetryLanes （比 TransitionLanes 优先级低，比 IdleLanes 的优先级高的 4 个 Lane） 的部分进行状态变更：
-    1. 从低到高依此取出每个 lane
-    2. 再取出对应这个 lane 在 expirationTimes 中的 expirationTime
-        1. 如果 expirationTime 是 NoTimestamp ，即这个 Lane 永不过期
-            1. 如果这个 lane 不是 suspendedLane ，或者是 pingedLane ，则重新计算 expirationTime ，并更新到 expirationTimes 当中。
-        2. 否则，如果 `expirationTime <= currentTime` ，则把这个 lane 加入到 expiredLanes
-    
+   1. 从低到高依此取出每个 lane
+   2. 再取出对应这个 lane 在 expirationTimes 中的 expirationTime
+      1. 如果 expirationTime 是 NoTimestamp ，即这个 Lane 永不过期
+         1. 如果这个 lane 不是 suspendedLane ，或者是 pingedLane ，则重新计算 expirationTime ，并更新到 expirationTimes 当中。
+      2. 否则，如果 `expirationTime <= currentTime` ，则把这个 lane 加入到 expiredLanes
+
+### getMostRecentEventTime(root: FiberRoot, lanes: Lanes): number
+
+这个函数相对也比较容易理解。第一个参数是 FiberRoot 类型。在 FiberRoot 上有一个属性 `eventTimes` ，这是一个长度为 31 （与 lane 的种类一致） 的数组。第二个参数是 Lanes ，恰好与 `eventTimes` 长度对应上。因此，这个函数就是对第二个入参 `lanes` 进行迭代，在每一个存在 `Lane` 的位上，即二进制表示中值为 1 ，取这个位对应在 `eventTimes` 上的一个时间戳，最后返回最大的那个即可。
