@@ -69,3 +69,11 @@ categories: Frontend
 ### getMostRecentEventTime(root: FiberRoot, lanes: Lanes): number
 
 这个函数相对也比较容易理解。第一个参数是 FiberRoot 类型。在 FiberRoot 上有一个属性 `eventTimes` ，这是一个长度为 31 （与 lane 的种类一致） 的数组。第二个参数是 Lanes ，恰好与 `eventTimes` 长度对应上。因此，这个函数就是对第二个入参 `lanes` 进行迭代，在每一个存在 `Lane` 的位上，即二进制表示中值为 1 ，取这个位对应在 `eventTimes` 上的一个时间戳，最后返回最大的那个即可。
+
+### markRootUpdated(root: FiberRoot, updateLane: Lane, eventTime: number): void
+
+这个函数就是更新 `FiberRoot#pendingLanes` 的实现。
+
+1. 把 `updateLane` 加入到 `root.pendingLanes` 这个集合中
+2. 如果 `updateLane` 不是 `IdleLane` ，把 `root.suspendedLanes` 和 `root.pingedLanes` 置为 `NoLanes`
+3. 更新 `updateLane` 对应在 `root.eventTimes` 中的时间戳为 `eventTime`
