@@ -106,3 +106,10 @@ categories: Frontend
    2. 把 `root.eventTimes` 中对应位置的元素置为 `NoTimestamp`
    3. 把 `root.expirationTimes` 中对应位置的元素置为 `NoTimestamp`
    4. 更新 `root.hiddenUpdates` 中对应位置的元素为 `null`; `hiddenUpdates` 每个位置的元素也是一个数组，元素则是 `update`，而每个 `update` 也有 `lane` 属性。如果 `update` 的 `lane` 是 `OffscreenLane`，则只为 `NoLane`，否则保持不变
+
+### markRootEntangled(root: FiberRoot, entangledLanes: Lanes): void
+
+这个函数就是更新 `root.entangledLanes` 的实现。
+1. 把 `entangledLanes` 加入到 `root.entangledLanes`
+2. 取出 `root.entanglements`，迭代更新后的 `entangledLanes`
+   1. 如果一个二进制位上的 Lane 是本次新增的，或者原本就存在，那就把对应的 `entanglement` 与 `entangledLanes` 合并。
