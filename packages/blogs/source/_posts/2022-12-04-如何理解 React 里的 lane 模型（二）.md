@@ -110,6 +110,16 @@ categories: Frontend
 ### markRootEntangled(root: FiberRoot, entangledLanes: Lanes): void
 
 这个函数就是更新 `root.entangledLanes` 的实现。
+
 1. 把 `entangledLanes` 加入到 `root.entangledLanes`
 2. 取出 `root.entanglements`，迭代更新后的 `entangledLanes`
    1. 如果一个二进制位上的 Lane 是本次新增的，或者原本就存在，那就把对应的 `entanglement` 与 `entangledLanes` 合并。
+
+### markHiddenUpdate(root: FiberRoot, update: ConcurrentUpdate, lane: Lane): void
+
+这个函数就是更新 `root.hiddenUpdates` 的实现。
+
+1. 计算出这个 `update` 对应的 lane，即第三个参数的二进制位中的 1 的下标
+2. 取出这个下标对应的 `hiddenUpdateForLane`
+3. 将 `update` push 到 `hiddenUpdateForLane`
+4. 更新 `update.lane`，向其中加入 `OffscreenLane`
