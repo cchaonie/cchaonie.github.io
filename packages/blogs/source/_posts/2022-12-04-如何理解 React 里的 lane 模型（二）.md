@@ -139,3 +139,10 @@ categories: Frontend
 3. 检查 `hydrationLane` 与 `root.suspendedLanes` 和 `renderLanes` 的合集是否存在交集（why?），
    1. 如果存在，则返回 `NoLane`
    2. 否则，返回 `hydrationLane`
+
+### addFiberToLanesMap(root: FiberRoot, fiber: Fiber, lanes: Lanes | Lane): void
+目前尚不清楚这个函数的作用是什么，其细节如下：
+1. 获取 `root.pendingUpdatersLaneMap`
+2. 迭代第三个参数 `lanes`，取其二进制位上的每个 Lane
+    1. 获取这个 Lane 对应下标在 `pendingUpdatersLaneMap` 中的元素 `updater`
+    2. 把第二个参数 `fiber` 添加到这个 `updater` 中
