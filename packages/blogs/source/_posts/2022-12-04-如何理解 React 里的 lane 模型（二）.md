@@ -123,3 +123,19 @@ categories: Frontend
 2. 取出这个下标对应的 `hiddenUpdateForLane`
 3. 将 `update` push 到 `hiddenUpdateForLane`
 4. 更新 `update.lane`，向其中加入 `OffscreenLane`
+
+### getBumpedLaneForHydration(root: FiberRoot, renderLanes: Lanes): Lane
+
+目前尚不清楚这个函数的作用是什么，其细节如下：
+
+1. 取出 `renderLanes` 中优先级最高的 `renderLane`
+2. 将 `renderLane` 映射为某一个 `hydrationLane`
+   1. `SyncLane` -> `SyncHydrationLane`
+   2. `InputContinuousLane` -> `InputContinuousHydrationLane`
+   3. `DefaultLane` -> `DefaultHydrationLane`
+   4. 从 `TransitionLane1` 到 `RetryLane4` 都 -> `TransitionHydrationLane`
+   5. `IdleLane` -> `IdleHydrationLane`
+   6. 其他 -> `NoLane`
+3. 检查 `hydrationLane` 与 `root.suspendedLanes` 和 `renderLanes` 的合集是否存在交集（why?），
+   1. 如果存在，则返回 `NoLane`
+   2. 否则，返回 `hydrationLane`
