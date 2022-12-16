@@ -141,8 +141,21 @@ categories: Frontend
    2. 否则，返回 `hydrationLane`
 
 ### addFiberToLanesMap(root: FiberRoot, fiber: Fiber, lanes: Lanes | Lane): void
+
 目前尚不清楚这个函数的作用是什么，其细节如下：
+
 1. 获取 `root.pendingUpdatersLaneMap`
 2. 迭代第三个参数 `lanes`，取其二进制位上的每个 Lane
-    1. 获取这个 Lane 对应下标在 `pendingUpdatersLaneMap` 中的元素 `updater`
-    2. 把第二个参数 `fiber` 添加到这个 `updater` 中
+   1. 获取这个 Lane 对应下标在 `pendingUpdatersLaneMap` 中的元素 `updater`
+   2. 把第二个参数 `fiber` 添加到这个 `updater` 中
+
+### movePendingFibersToMemoized(root: FiberRoot, lanes: Lanes): void
+
+这个函数是用来把 `FiberRoot` 中 `pendingUpdatersLaneMap` 中的 fiber，添加到 `memoizedUpdaters` 中。其实现细节如下：
+
+1. 获取 `root.pendingUpdatersLaneMap` 和 `root.memoizedUpdaters`
+2. 迭代第二个参数 `lanes`，取其二进制位上的每个 Lane
+   1. 获取这个 Lane 对应下标在 `pendingUpdatersLaneMap` 中的元素 `updaters`
+   2. 如果 `updaters.size > 0`，迭代 `updaters` 中的 fiber
+      1. 取 `fiber.alternate`, 如果 `alternate` 为 `null` 或者 `memoizedUpdaters` 不包含 `alternate`，则将其添加到 `memoizedUpdaters`
+      2. 清空 `updaters`
