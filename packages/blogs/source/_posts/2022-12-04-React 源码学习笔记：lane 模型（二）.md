@@ -1,7 +1,7 @@
 ---
-title: 如何理解 React 里的 lane 模型（二）
+title: React 源码学习笔记：lane 模型（二）
 date: 2022-12-04
-tags: [React, lane]
+tags: [React, lane, 源码]
 categories: Frontend
 ---
 
@@ -27,6 +27,10 @@ categories: Frontend
 目前，对于这几个属性，我的理解并不全面。结合 fiber 在 React 的模型中体现的是一个任务，而 FiberRoot 指向的是一个 fiber 树的根节点，一个合理的猜测就是，当这颗 fiber 树中一旦产生了新的任务，那么这个任务的优先级就会被放入到 FiberRoot 上的 lanes 属性。
 
 前四个从名称上可以推断出代表着不同状态的 lanes，当一个任务刚刚被创建，相对应的 lane 应当被放到 pendingLanes 当中；如果这个任务超时了，相对应的 lane 则应当被放到 expiredLanes 当中；如果一个任务在执行中，但是突然被优先级更高的任务所打断，相对应的 lane 则应当被转移到 suspendedLanes。至于 pingedLanes，目前我对它的作用尚无了解。
+
+<!--more-->
+
+## Lane 模型中与 FiberRoot 和 Fiber 有关的运算
 
 ### getNextLanes(root: FiberRoot, wipLanes: Lanes): Lanes
 
@@ -159,3 +163,28 @@ categories: Frontend
    2. 如果 `updaters.size > 0`，迭代 `updaters` 中的 fiber
       1. 取 `fiber.alternate`, 如果 `alternate` 为 `null` 或者 `memoizedUpdaters` 不包含 `alternate`，则将其添加到 `memoizedUpdaters`
       2. 清空 `updaters`
+
+以上就是 Lane 模型中与 `FiberRoot` 和 `Fiber` 有关的运算。除此之外， Lane 模型中还导出了一部分无入参的函数。函数必定要有操作对象，要么是入参，要么就是模块内的变量。这些无入参的函数，操作对象就是 `ReactFiberLane` 这个模块内部的变量。`ReactFiberLane` 中的模块变量有两个：
+
+1. `let nextTransitionLane: Lane = TransitionLane1;`
+2. `let nextRetryLane: Lane = RetryLane1;`
+
+下面是操作他们的函数。
+
+### claimNextTransitionLane(): Lane
+
+`claimNextTransitionLane` 就是更新 `nextTransitionLane` 的函数。其步骤如下：
+
+1. 保存 `nextTransitionLane` 当前的值在 `lane` 中
+2. 把 `nextTransitionLane` 向左移动一位，即将其变成相邻的更低优先级
+3. 如果 `nextTransitionLane` 新的值已经超越了 `TransitionLanes` 的范畴，则将其重置为 `TransitionLane1`
+4. 返回 `nextTransitionLane` 变更之前的值
+
+需要注意的一点是，调用 `claimNextTransitionLane` 获得的是 `nextTransitionLane` 当前值，不是变更之后的值。
+
+### claimNextRetryLane(): Lane
+
+`claimNextRetryLane` 就是更新 `nextRetryLane` 的函数，其实现与 `claimNextTransitionLane` 几乎一模一样，因此不再赘述。
+
+到这里，整个 Lane 模型中支持的运算已经全部解释完毕，大部分的运算都比较容易理解。比较难懂的几个是因为与 `FiberRoot` 中一些属性的作用有关系，但是我目前尚不理解这些属性，所以暂时无法解释，只能留待后面理解了之后再做回顾
+。

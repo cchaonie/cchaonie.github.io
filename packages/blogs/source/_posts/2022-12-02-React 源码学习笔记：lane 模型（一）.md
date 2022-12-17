@@ -1,7 +1,7 @@
 ---
-title: 如何理解 React 里的 lane 模型（一）
+title: React 源码学习笔记：lane 模型（一）
 date: 2022-12-02
-tags: [React, lane]
+tags: [React, lane, 源码]
 categories: Frontend
 ---
 
