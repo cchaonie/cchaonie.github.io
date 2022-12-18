@@ -93,4 +93,14 @@ export type Fiber = {
 
 令人意外的是，在这个模块中，没有定义 `Fiber` 对象的构造函数，反而是定义了 `FiberNode` 的构造函数。然后使用了一个 `createFiber` 的函数来作为构建新的 `Fiber` 的 载体，在其中调用了 `new FiberNode` 来返回一个 `Fiber` 对象。在这个基础之上，所有其他的构造 `Fiber` 对象的函数，都会在内部调用 `createFiber`。
 
+## FiberNode 模块内的函数
 
+### shouldConstruct(Component: Function): boolean
+
+这是一个仅在模块内部使用的函数，其作用是用来判断当前组件是不是继承了 `React.Component`，即该组件是不是 class component。
+
+### isSimpleFunctionComponent(type: any): boolean
+
+从函数名可以知道，这个函数是用来检查 `type` 是否是 _简单函数式组件_。其步骤如下：
+
+1.如果 `type` 是一个函数，并且不是 class component，并且 `type.defaultProps` 不存在，那么这个组件就是 SimpleFunctionComponent。
