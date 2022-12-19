@@ -104,3 +104,15 @@ export type Fiber = {
 从函数名可以知道，这个函数是用来检查 `type` 是否是 _简单函数式组件_。其步骤如下：
 
 1.如果 `type` 是一个函数，并且不是 class component，并且 `type.defaultProps` 不存在，那么这个组件就是 SimpleFunctionComponent。
+
+### resolveLazyComponentTag(Component: Function): WorkTag
+
+这个函数是用来判断一个 `Component` 应该产生一个什么样的 _任务_。其步骤如下：
+
+1. 如果 `Component` 是函数类型，则根据 `shouldConstruct(Component)` 的返回值来判断应该返回 `ClassComponent` 还是 `FunctionComponent`
+2. 否则，如果 `Component` 不是 `undefined` 或者 `null`，即它是一个对象，这时候就根据 `$$typeof` 属性来判断
+3. 如果是 `REACT_FORWARD_REF_TYPE`，返回 `ForwardRef`
+4. 如果是 `REACT_MEMO_TYPE`，返回 `MemoComponent`
+5. 否则，返回 `IndeterminateComponent`
+
+这里的 `IndeterminateComponent` 比较特殊，因为 React 是支持从 Promise 里 resolve 一个 Component 的，在 Promise 成功 resolve 之前，其代表的任务就是 `IndeterminateComponent`
