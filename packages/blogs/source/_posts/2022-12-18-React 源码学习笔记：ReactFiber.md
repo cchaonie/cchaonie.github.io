@@ -95,6 +95,15 @@ export type Fiber = {
 
 ## FiberNode 模块内的函数
 
+## createFiber(tag: WorkTag, pendingProps: mixed, key: null | string, mode: TypeOfMode): Fiber
+
+所有的 Fiber 都是通过这个函数构造的。从函数的入参可以知道，区分 Fiber 的关键参数就是这几个入参。
+
+1. `tag` 表示当前这个 `Fiber` 的任务类型
+2. `pendingProps` 表示当前渲染时，即组件最新的 `props`
+3. `key` 用来标识一个组件的 `Fiber` 是否发生变化
+4. `mode` 表示这个 `Fiber` 所处的模式，是 `ConcurrentMode` 还是其他的
+
 ### shouldConstruct(Component: Function): boolean
 
 这是一个仅在模块内部使用的函数，其作用是用来判断当前组件是不是继承了 `React.Component`，即该组件是不是 class component。
