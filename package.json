@@ -11,11 +11,7 @@
     "dev": "ts-node-esm scripts/development.ts"
   },
   "workspaces": [
-    "packages/g2m",
-    "packages/apmer",
-    "packages/blogs",
-    "packages/main",
-    "packages/infinite-scroller"
+    "packages/*"
   ],
   "repository": {
     "type": "git",
