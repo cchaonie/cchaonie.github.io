@@ -79,3 +79,35 @@ categories: Frontend
 4. `let pendingPassiveTransitions: Array<Transition> | null = null;`
 
 ## 模块级函数
+
+### resetRenderTime(): void
+
+这个函数的作用是更新模块级变量 `workInProgressRootRenderTargetTime`。实现很简单：
+
+1. `workInProgressRootRenderTargetTime = now() + RENDER_TIMEOUT_MS;`
+
+### requestRetryLane(fiber: Fiber): Lane
+
+这个函数的作用是根据 `fiber` 获取下一个 `RetryLane`。其实现如下：
+
+1. 取得 `fiber.mode`
+2. 如果 `mode` 与 `ConcurrentMode` 之间没有交集，则返回 `SyncLane`
+3. 否则调用 `claimNextRetryLane()` 获取 `nextRetryLane`
+
+### ensureRootIsScheduled(root: FiberRoot, currentTime: number): void
+
+这个函数的作用是在组件更新的时候，调度这颗 fiber 树的任务，将更新任务放入任务队列中。其实现细节如下：
+
+1. 获取 `root.callbackNode` 并记作 `existingCallbackNode`。`callbackNode` 代表的是当前这颗 fiber 树接下来需要执行的任务。在 `Sync` 模式下为 `null`，在 `ConcurrentMode` 下就是调度完成后的任务本身。
+2. 根据 `currentTime`，调用 `markStarvedLanesAsExpired(root, eventTime)` 更新当前 `FiberRoot` 上的 `expirationTimes`。
+3. 调用 `getNextLanes(root, wipRenderLanes)` 获取即将调度的任务的 `nextLanes`。
+   1. 如果 `nextLanes` 为空，即没有需要调度的任务，检查 `existingCallbackNode`，如果不是 `null`，则调用 `cancelCallback(existingCallbackNode)` 取消这个任务。然后重置 `root.callbackNode` 和 `root.callbackPriority`。
+   2. 否则，调用 `getHighestPriorityLane(nextLanes)` 获取 `nextLanes` 中优先级最高的 `Lane`，即其二进制表示中最右边的一个 `1`，作为 `newCallbackPriority`。
+   3. 检查 `existingCallbackNode`，如果不是 `null`，则调用 `cancelCallback(existingCallbackNode)` 取消这个任务。
+   4. 检查 `newCallbackPriority` 是否包含 `SyncLane`。
+      1. 如果包含，则根据 `root.tag === LegacyRoot`，分别使用 `scheduleLegacySyncCallback` 或者 `scheduleSyncCallback` 调度更新任务 `performSyncWorkOnRoot`。
+         1. 如果当前环境支持微任务，使用微任务调度 `flushSyncCallbacks()`;
+         2. 否则，以 `ImmediateSchedulerPriority` 的优先级调度 flushSyncCallbacks
+         3. 把 `newCallbackNode` 置为 `null`。
+      2. 否则，根据 `nextLanes` 获取对应的 `eventPriority`，把 `newCallbackNode` 置为 以这个 `eventPriority` 调度 `performConcurrentWorkOnRoot` 的函数。
+   5. 把 `newCallbackNode` 和 `newCallbackPriority` 更新到 `root` 上。
