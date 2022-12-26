@@ -111,3 +111,36 @@ categories: Frontend
          3. 把 `newCallbackNode` 置为 `null`。
       2. 否则，根据 `nextLanes` 获取对应的 `eventPriority`，把 `newCallbackNode` 置为 以这个 `eventPriority` 调度 `performConcurrentWorkOnRoot` 的函数。
    5. 把 `newCallbackNode` 和 `newCallbackPriority` 更新到 `root` 上。
+
+### performConcurrentWorkOnRoot(root, didTimeout): void
+
+这个函数是 concurrent task 的入口。其实现大致思路如下：
+
+1. 重置部分模块级变量： `currentEventTime` 和 `currentEventTransitionLane`
+2. 调用 `flushPassiveEffects()`。根据返回值 `didFlushPassiveEffects` 以及 `root.callbackNode` 是否发生变化来决定是否继续执行当前函数。
+3. 调用 `getNextLanes(root, wipRenderLanes)` 获取当前任务的 `lanes`。如果 `lanes` 是 `NoLanes`，直接返回 `null`。
+4. 判断是否进行时间分片 `shouldTimeSlice`。
+5. 根据 `shouldTimeSlice` 的值，分别调用 `renderRootConcurrent(root, lanes)` 或者 `renderRootSync(root, lanes)`，并记录返回值 `exitStatus`。
+6. 判断 `exitStatus !== RootInProgress`。
+   1. 如果为 `true`，表示当前任务已经结束。这里的结束可能是任务已经完成，也有可能是任务出错。
+   2. 如果为 `false`，表示当前任务还需要继续，但是当前因为某种原因被中断。
+      1. 继续调用 `ensureRootIsScheduled(root, now());` 重新安排任务。
+      2. 检查当前任务 `root.callbackNode` 是否与之前的任务相同。
+         1. 如果相同，并且之前中止的原因是 _需要等待数据_ ，则重置当前任务。
+         2. 否则，递归调用 `performConcurrentWorkOnRoot.bind(null, root)`
+
+再详细展开一下 _当前任务已结束_ 时的处理流程。
+
+1. 如果 `exitStatus` 是 `RootErrored`，尝试恢复后续的任务执行。
+2. 如果 `exitStatus` 是 `RootFatalErrored`。
+   1. 调用 `prepareFreshStack(root, NoLanes)` 将 `wip` 相关的模块级变量恢复为根节点任务开始执行前的状态。
+   2. 调用 `markRootSuspended(root, lanes)` 将当前任务对应的 lanes 增加到 `root.suspendedLanes`。
+   3. 调用 `ensureRootIsScheduled(root, now())` 重新开始调度。
+   4. 抛出导致渲染结束的 fatal error `workInProgressRootFatalError`。
+3. 如果 `exitStatus` 是 `RootDidNotComplete`，调用 `markRootSuspended(root, lanes)` 将当前任务对应的 lanes 增加到 `root.suspendedLanes`。
+4. 如果 `exitStatus` 其他值。
+   1. 如果之前执行的任务是 `concurrent` 并且 `!isRenderConsistentWithExternalStores(finishedWork)` 为 `true`，调用 `exitStatus = renderRootSync(root, lanes);` 重新渲染，并根据 `exitStatus` 重新进行 error 逻辑判断。
+   2. 否则，更新 `FiberRoot`
+      1. `root.finishedWork = finishedWork;`
+      2. `root.finishedLanes = lanes;`
+      3. 调用 `finishConcurrentRender(root, exitStatus, lanes)` 完成此次 render。
