@@ -144,3 +144,25 @@ categories: Frontend
       1. `root.finishedWork = finishedWork;`
       2. `root.finishedLanes = lanes;`
       3. 调用 `finishConcurrentRender(root, exitStatus, lanes)` 完成此次 render。
+
+### renderRootConcurrent(root: FiberRoot, lanes: Lanes): ExitStatus
+
+再来看 `renderRootConcurrent` 做了那些事情。整个函数的内容可以分为三个部分：
+
+1. 准备阶段，初始化部分模块级变量
+2. 执行阶段，执行 `workLoopConcurrent()` 进行渲染
+3. 恢复阶段，将在第一阶段改变了的模块级变量恢复成之前的值
+
+而执行阶段的代码比较有意思，使用了一个 _带标签的 `do...while(true)` 循环_。如果 `workLoopConcurrent()` 顺利执行完毕，则退出循环。否则，这个时候原本的 render 任务因为异常而被迫提前退出，所以通过捕获 error，再次进入循环，这时候会首先检查 error 的类型，执行完相应的工作之后，再次执行 `workLoopConcurrent()`。
+
+### workLoopConcurrent(): void
+
+这个函数的实现很简单，只有 2 行代码：
+
+```javascript
+while (workInProgress !== null && !shouldYield()) {
+  performUnitOfWork(workInProgress);
+}
+```
+
+`shouldYield` 是 `scheduler` 包导出的一个函数，其作用是判断当前函数的执行是否超出时间，或者应该让位于其他优先级更高的函数。如果是，则停止执行该函数，否则就继续循环。这是 concurrent rendering 实现中的关键一点。
