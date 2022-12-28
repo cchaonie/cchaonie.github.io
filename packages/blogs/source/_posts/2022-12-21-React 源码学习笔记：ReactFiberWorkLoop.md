@@ -166,3 +166,9 @@ while (workInProgress !== null && !shouldYield()) {
 ```
 
 `shouldYield` 是 `scheduler` 包导出的一个函数，其作用是判断当前函数的执行是否超出时间，或者应该让位于其他优先级更高的函数。如果是，则停止执行该函数，否则就继续循环。这是 concurrent rendering 实现中的关键一点。
+
+### performUnitOfWork(unitOfWork: Fiber): void
+
+`performUnitOfWork` 的作用也很简单，即调用 `beginWork(current, unitOfWork, renderLanes)` 获取下一个任务 `next`。
+如果 `next` 为 `null`，表示没有下一个任务，那么就调用 `completeUnitOfWork(unitOfWork)`。
+否则，将 `next` 赋值给 `workInProgress`，由 `workLoopConcurrent()` 决定是否继续执行 render 任务。
