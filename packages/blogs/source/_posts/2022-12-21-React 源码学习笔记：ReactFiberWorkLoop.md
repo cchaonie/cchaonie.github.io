@@ -169,6 +169,25 @@ while (workInProgress !== null && !shouldYield()) {
 
 ### performUnitOfWork(unitOfWork: Fiber): void
 
-`performUnitOfWork` 的作用也很简单，即调用 `beginWork(current, unitOfWork, renderLanes)` 获取下一个任务 `next`。
+这个函数是 React 的 diff 算法中 _深度优先遍历_ 的前一部分，`workInProgress` 在不断地沿着组件树向下移动。
+
+`performUnitOfWork` 的实现逻辑也很简单，即调用 `beginWork(current, unitOfWork, renderLanes)` 获取下一个任务 `next`。
 如果 `next` 为 `null`，表示没有下一个任务，那么就调用 `completeUnitOfWork(unitOfWork)`。
 否则，将 `next` 赋值给 `workInProgress`，由 `workLoopConcurrent()` 决定是否继续执行 render 任务。
+
+### completeUnitOfWork(unitOfWork: Fiber): void
+
+这个函数是 React 的 diff 算法中 _深度优先遍历_ 的后一部分，`workInProgress` 在不断地沿着组件树向上返回，如果碰到兄弟组件 `sibling`，则 `workInProgress` 转移到这个 `sibling` 上，再继续向下移动。
+
+`completeUnitOfWork` 的逻辑如下：
+
+1. 使用 `do...while(completedWork !== null)` 来判断是否到达组件树的根节点。
+2. 对每一个 `completedWork`，根据 `completedWork.flags` 判断此节点的任务是否完结。
+   1. 若完结，则调用 `completeWork(current, completedWork, renderLanes)`
+   2. 否则，在处理这个节点任务的过程中抛出了异常，需要调用 `unwindWork(current, completedWork, renderLanes)`
+3. 这两个调用都会返回一个接下来的工作任务 `next`。
+   1. 如果 `next` 不为 `null`，表示有新的工作需要处理，这时候直接把 `workInProgress` 指向这个任务后，直接结束 `completeUnitOfWork`。
+   2. 如果 `next` 等于 `null`，说明这个节点的任务已经处理完毕。
+4. 接下来就可以检查 `sibling` 节点。
+   1. 如果 `sibling` 节点存在，则把 `workInProgress` 指向 `sibling`后，直接结束`completeUnitOfWork`。
+   2. 如果 `sibling` 节点不存在，则把 `completedWork` 指向 `completedWork.return`，即其父节点，进入新一轮迭代。
