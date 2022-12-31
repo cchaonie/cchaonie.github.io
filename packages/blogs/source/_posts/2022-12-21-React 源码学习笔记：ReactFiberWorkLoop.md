@@ -191,3 +191,13 @@ while (workInProgress !== null && !shouldYield()) {
 4. 接下来就可以检查 `sibling` 节点。
    1. 如果 `sibling` 节点存在，则把 `workInProgress` 指向 `sibling`后，直接结束`completeUnitOfWork`。
    2. 如果 `sibling` 节点不存在，则把 `completedWork` 指向 `completedWork.return`，即其父节点，进入新一轮迭代。
+
+### finishConcurrentRender(root, exitStatus, lanes): void
+
+每次 render 的入口都是从根节点开始执行 `performConcurrentWorkOnRoot`，而 render 工作本身是在 `renderRootConcurrent` 中完成的。完成 render 工作之后，接下来就需要把 render 的产物—— UI 的更新描述，同步到页面上。这个工作是在 `finishConcurrentRender` 中进行的。
+
+`finishConcurrentRender` 的实现很简单，就是根据 `exitStatus` 的值，用不同的参数调用 `commitRoot(root, workInProgressRootRecoverableErrors, workInProgressTransitions)` 或者抛出异常。
+
+### commitRoot(root: FiberRoot, recoverableErrors: null | Array<CapturedValue<mixed>>, transitions: Array<Transition> | null): void
+
+`commitRoot` 体现了 _面向接口编程_ 的原则，其实现仅仅调用了 `commitRootImpl`。
