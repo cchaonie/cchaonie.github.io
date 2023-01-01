@@ -201,3 +201,14 @@ while (workInProgress !== null && !shouldYield()) {
 ### commitRoot(root: FiberRoot, recoverableErrors: null | Array<CapturedValue<mixed>>, transitions: Array<Transition> | null): void
 
 `commitRoot` 体现了 _面向接口编程_ 的原则，其实现仅仅调用了 `commitRootImpl`。
+
+### commitRootImpl(root: FiberRoot, recoverableErrors: null | Array<CapturedValue<mixed>>, transitions: Array<Transition> | null, renderPriorityLevel: EventPriority): void
+
+这个函数即所谓的 commit 阶段。首先做的事情是通过一个 `do...while` 循环，不断地调用 `flushPassiveEffects()`。
+在这之后，主要做的事情就是调用三个函数：
+
+1. `commitBeforeMutationEffects(root, finishedWork)`
+2. `commitMutationEffects(root, finishedWork, lanes)`
+3. `commitLayoutEffects(finishedWork, root, lanes)`
+
+在最后结束 commit 阶段的工作之前，再安排一次 render 任务。
