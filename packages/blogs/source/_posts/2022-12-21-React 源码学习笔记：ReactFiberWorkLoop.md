@@ -212,3 +212,11 @@ while (workInProgress !== null && !shouldYield()) {
 3. `commitLayoutEffects(finishedWork, root, lanes)`
 
 在最后结束 commit 阶段的工作之前，再安排一次 render 任务。
+
+在 `ReactFiberWorkLoop` 模块中有两种 render 相关的函数，上面仅提到了 concurrent 相关的，另一种则是 sync 相关的。主要包括：
+
+1. `performSyncWorkOnRoot`
+2. `renderRootSync`
+3. `workLoopSync`
+
+这里暂不对 sync 相关的 render 函数进行展开。
