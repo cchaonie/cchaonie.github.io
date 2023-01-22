@@ -19,3 +19,9 @@ categories: Frontend
 1. `renderLanes: Lanes = NoLanes`。每次函数式组件执行的时候，都会重置这个值，标识当前组件的 _优先级_
 2. `let currentlyRenderingFiber: Fiber = null`。函数组件对应的 Fiber 节点
 3. `let currentHook: Hook | null = null` 和 `let workInProgressHook: Hook | null = null`。每个 react hook 执行之后都会生成一个 hook 对象，前者对应的是已经存在的 Fiber 节点中的 hook，后者则是正在构建的 Fiber 树中的正在执行的 hook 生成的对象。
+
+然后是几个 Dispatcher: 
+1. ContextOnlyDispatcher
+2. HooksDispatcherOnMount
+3. HooksDispatcherOnUpdate
+4. HooksDispatcherOnRerender
